@@ -44,7 +44,7 @@ public class LaundryService {
 			"http://www.opentable.com/opentables.aspx";
 	
 	private static final DateFormat OPENTABLE_DATE_FORMAT = 
-			new SimpleDateFormat("M/d/YYYY H:mm:ss a");
+			new SimpleDateFormat("M/d/yyyy H:mm:ss a");
 	
 	private static final Pattern AVAILABLE_TIME_PATTERN = 
 			Pattern.compile("<span class=\\\"t\\\">([0-9]{1,2}:[0-9]{1,2})</span>");
@@ -89,7 +89,7 @@ public class LaundryService {
 
 		if (output.contains("Your requested date exceeds")) {
 			return new Result(ResultType.TOO_SOON, url.build());
-		} else if (output.contains("There are no reservations currently available") || output.contains("No tables are available within")) {
+		} else if (output.contains("There are no reservations currently available") || output.contains("No tables are available within") || output.contains("Currently offline")) {
 			return new Result(ResultType.UNAVAILABLE, url.build());
 		}
 		
