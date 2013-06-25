@@ -18,6 +18,7 @@ public class LaundryService {
 	public enum ResultType {
 		TOO_SOON,
 		UNAVAILABLE,
+		OFFLINE,
 		AVAILABLE;
 	}
 	
@@ -69,11 +70,11 @@ public class LaundryService {
 			
 			System.out.println("Checking for day " + current.getTime().toString() + ": " + result.getType());
 
-			if (result.getType() == ResultType.AVAILABLE || result.getType() == ResultType.TOO_SOON)
+			if (result.getType() != ResultType.UNAVAILABLE)
 				return result;
 			
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {}
 			
 
@@ -89,8 +90,10 @@ public class LaundryService {
 
 		if (output.contains("Your requested date exceeds")) {
 			return new Result(ResultType.TOO_SOON, url.build());
-		} else if (output.contains("There are no reservations currently available") || output.contains("No tables are available within") || output.contains("Currently offline")) {
+		} else if (output.contains("There are no reservations currently available") || output.contains("No tables are available within")) {
 			return new Result(ResultType.UNAVAILABLE, url.build());
+		} else if (output.contains("Currently offline")) {
+		   return new Result(ResultType.OFFLINE, url.build());
 		}
 		
 		Matcher timeMatcher = AVAILABLE_TIME_PATTERN.matcher(output);
