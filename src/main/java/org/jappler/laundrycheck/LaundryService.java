@@ -18,6 +18,7 @@ public class LaundryService {
 	public enum ResultType {
 		TOO_SOON,
 		UNAVAILABLE,
+		OFFLINE,
 		AVAILABLE;
 	}
 	
@@ -44,7 +45,7 @@ public class LaundryService {
 			"http://www.opentable.com/opentables.aspx";
 	
 	private static final DateFormat OPENTABLE_DATE_FORMAT = 
-			new SimpleDateFormat("M/d/YYYY H:mm:ss a");
+			new SimpleDateFormat("M/d/yyyy H:mm:ss a");
 	
 	private static final Pattern AVAILABLE_TIME_PATTERN = 
 			Pattern.compile("<span class=\\\"t\\\">([0-9]{1,2}:[0-9]{1,2})</span>");
@@ -69,11 +70,11 @@ public class LaundryService {
 			
 			System.out.println("Checking for day " + current.getTime().toString() + ": " + result.getType());
 
-			if (result.getType() == ResultType.AVAILABLE || result.getType() == ResultType.TOO_SOON)
+			if (result.getType() != ResultType.UNAVAILABLE)
 				return result;
 			
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {}
 			
 
@@ -91,6 +92,8 @@ public class LaundryService {
 			return new Result(ResultType.TOO_SOON, url.build());
 		} else if (output.contains("There are no reservations currently available") || output.contains("No tables are available within")) {
 			return new Result(ResultType.UNAVAILABLE, url.build());
+		} else if (output.contains("Currently offline")) {
+		   return new Result(ResultType.OFFLINE, url.build());
 		}
 		
 		Matcher timeMatcher = AVAILABLE_TIME_PATTERN.matcher(output);

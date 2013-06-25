@@ -9,8 +9,9 @@ import com.twilio.sdk.resource.instance.Sms;
 
 public class LaundryText {
 
-	public static final String ACCOUNT_SID = "?";
-	public static final String AUTH_TOKEN = "?";
+	public static final String ACCOUNT_SID = System.getenv("TWILIO_SID");
+	public static final String AUTH_TOKEN = System.getenv("TWILIO_TOKEN");
+	
 	public static final String TWILIO_PHONE_NUMBER = "+16507794377";
 
 	public static void sendSMS(String to, String text) {
