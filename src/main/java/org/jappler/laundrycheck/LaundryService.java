@@ -87,8 +87,10 @@ public class LaundryService {
 		GenericUrl url = getUrl(date);
 
 		String output = loadPage(url);
-
-		if (output.contains("Your requested date exceeds")) {
+		
+		if (output.trim().isEmpty()) {
+			return new Result(ResultType.OFFLINE, url.build());
+		} else if (output.contains("Your requested date exceeds")) {
 			return new Result(ResultType.TOO_SOON, url.build());
 		} else if (output.contains("There are no reservations currently available") || output.contains("No tables are available within")) {
 			return new Result(ResultType.UNAVAILABLE, url.build());
