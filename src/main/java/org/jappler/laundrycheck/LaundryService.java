@@ -50,17 +50,16 @@ public class LaundryService {
 	private static final Pattern AVAILABLE_TIME_PATTERN = 
 			Pattern.compile("<span class=\\\"t\\\">([0-9]{1,2}:[0-9]{1,2})</span>");
 	
-	public static Result checkReservationsForTwoMonthsFromToday() {
+	public static Result checkReservationsForNextTwoMonths() {
 		Calendar date = Calendar.getInstance();
 		
-		date.add(Calendar.MONTH, 2);
 		date.set(Calendar.HOUR, 7);
 		date.set(Calendar.MINUTE, 0);
 		date.set(Calendar.SECOND, 0);
 		date.set(Calendar.AM_PM, Calendar.PM);
 		
 		Result result = null;
-		for (int i = -4; i < 3; i++) {
+		for (int i = 0; i < 64; i++) {
 			Calendar current = Calendar.getInstance();
 			current.setTime(date.getTime());
 			
@@ -74,7 +73,7 @@ public class LaundryService {
 				return result;
 			
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(9000);
 			} catch (InterruptedException e) {}
 			
 
@@ -87,8 +86,10 @@ public class LaundryService {
 		GenericUrl url = getUrl(date);
 
 		String output = loadPage(url);
-
-		if (output.contains("Your requested date exceeds")) {
+		
+		if (output.trim().isEmpty()) {
+			return new Result(ResultType.OFFLINE, url.build());
+		} else if (output.contains("Your requested date exceeds")) {
 			return new Result(ResultType.TOO_SOON, url.build());
 		} else if (output.contains("There are no reservations currently available") || output.contains("No tables are available within")) {
 			return new Result(ResultType.UNAVAILABLE, url.build());
