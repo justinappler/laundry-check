@@ -6,7 +6,7 @@ public class LaundryCheck {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		LaundryService.Result checkResult = LaundryService.checkReservationsForTwoMonthsFromToday();
+		LaundryService.Result checkResult = LaundryService.checkReservationsForNextTwoMonths();
 		
 		switch (checkResult.getType()) {
 			case AVAILABLE:
