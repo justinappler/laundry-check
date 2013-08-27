@@ -8,7 +8,7 @@ Uses the Twilio API, so be sure to set the necessary API keys in the environment
 ## Usage
 
 ```
-./java -jar laundryCheck.jar [-party <Party Size>] [-phone <Number to Text>]
+java -jar laundryCheck.jar [-party <Party Size>] [-phone <Number to Text>]
 ```
 
 ## Author
